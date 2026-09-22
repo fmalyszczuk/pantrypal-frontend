@@ -1,0 +1,47 @@
+.home__hero {
+  text-align: center;
+  padding: 2rem 0 2.5rem;
+}
+
+.home__title {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+}
+
+.home__tagline {
+  max-width: 36rem;
+  margin: 0 auto;
+  font-size: 1.125rem;
+  color: #555;
+}
+
+.home__section-title {
+  font-size: 1.25rem;
+  margin: 0 0 1rem;
+}
+
+.home__ways {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.home__way {
+  padding: 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  background: #fafafa;
+}
+
+.home__way-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.home__way-description {
+  margin: 0;
+  color: #555;
+}

@@ -1,9 +1,10 @@
 import './App.css'
+import HomePage from './pages/HomePage.jsx'
 
 function App() {
   return (
     <main className="app">
-      <h1>PantryPal</h1>
+      <HomePage />
     </main>
   )
 }
