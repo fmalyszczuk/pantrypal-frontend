@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import ShoppingList from '../components/ShoppingList/ShoppingList.jsx'
-import { getShoppingList, deleteShoppingListItem } from '../api/shoppingList.js'
+import {
+  getShoppingList,
+  updateShoppingListItem,
+  deleteShoppingListItem,
+} from '../api/shoppingList.js'
 import './ShoppingListPage.css'
 
 function ShoppingListPage() {
@@ -29,13 +33,18 @@ function ShoppingListPage() {
   }, [])
 
   function handleTogglePurchased(itemId) {
-    // Local-only: the backend has no endpoint yet to persist `purchased`
-    // (see api/shoppingList.js). This resets on reload until one exists.
+    const target = items.find((item) => item.id === itemId)
+    if (!target) return
+
+    const nextPurchased = !target.purchased
     setItems((current) =>
-      current.map((item) =>
-        item.id === itemId ? { ...item, purchased: !item.purchased } : item,
-      ),
+      current.map((item) => (item.id === itemId ? { ...item, purchased: nextPurchased } : item)),
     )
+
+    // The backend matches by name, not id.
+    updateShoppingListItem(target.name, { purchased: nextPurchased }).catch((err) => {
+      console.warn('Could not persist purchased state:', err.message)
+    })
   }
 
   function handleDelete(itemId) {

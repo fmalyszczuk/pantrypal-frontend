@@ -1,4 +1,4 @@
-import { request, postJson, deleteResource } from './client.js'
+import { request, postJson, patchJson, deleteResource } from './client.js'
 
 // GET /shopping-list returns a plain array of ShoppingListItem, not a
 // wrapper object — confirmed against ../../README.md (backend context doc).
@@ -10,13 +10,17 @@ export function addShoppingListItem({ name, quantity, unit }) {
   return postJson('/shopping-list/items', { name, quantity, unit })
 }
 
+// Matched by NAME (case-insensitive), not id — confirmed in ../../README.md.
+// PATCH semantics: pass only the fields to change (e.g. { purchased: true }),
+// fields left out are unchanged. 404s (plain text body) if the name no
+// longer exists.
+export function updateShoppingListItem(name, updates) {
+  return patchJson(`/shopping-list/items/${encodeURIComponent(name)}`, updates)
+}
+
 // Deletes by NAME (case-insensitive), not id — this is how the backend
 // route is defined (DELETE /shopping-list/items/{name}), confirmed in
 // ../../README.md. No-op (still 204) if the name doesn't exist.
 export function deleteShoppingListItem(name) {
   return deleteResource(`/shopping-list/items/${encodeURIComponent(name)}`)
 }
-
-// There is currently NO endpoint to toggle `purchased` — confirmed in
-// ../../README.md under "What's NOT built yet". Until the backend adds a
-// PATCH/PUT for this, ShoppingListPage toggles it locally only.
