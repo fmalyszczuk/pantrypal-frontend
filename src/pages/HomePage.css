@@ -36,9 +36,40 @@
   background: #fafafa;
 }
 
+.home__way--unavailable {
+  border-color: #f3c9c9;
+  background: #fff6f6;
+}
+
+.home__way-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
 .home__way-title {
-  margin: 0 0 0.25rem;
+  margin: 0;
   font-size: 1.05rem;
+}
+
+.home__way--unavailable .home__way-title,
+.home__way--unavailable .home__way-description {
+  color: #999;
+}
+
+.home__way-badge {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #c0392b;
+  background: #fdecea;
+  border: 1px solid #f3b8b3;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
 }
 
 .home__way-description {
