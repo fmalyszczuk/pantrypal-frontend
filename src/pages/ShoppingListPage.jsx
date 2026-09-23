@@ -47,6 +47,24 @@ function ShoppingListPage() {
     })
   }
 
+  function handleUnitChange(itemId, newUnit) {
+    const target = items.find((item) => item.id === itemId)
+    if (!target || target.unit === newUnit) return
+
+    // No optimistic update here: when both units are recognized mass units,
+    // the backend recalculates `quantity` itself (see ../../README.md's
+    // "Unit conversion" note), so the resulting value is only known once the
+    // response comes back. On failure the select just reverts, since local
+    // state was never changed.
+    updateShoppingListItem(target.name, { unit: newUnit })
+      .then((updated) => {
+        setItems((current) => current.map((item) => (item.id === itemId ? updated : item)))
+      })
+      .catch((err) => {
+        console.warn('Could not update unit:', err.message)
+      })
+  }
+
   function handleDelete(itemId) {
     const target = items.find((item) => item.id === itemId)
     if (!target) return
@@ -78,6 +96,7 @@ function ShoppingListPage() {
         items={items}
         onTogglePurchased={handleTogglePurchased}
         onDelete={handleDelete}
+        onChangeUnit={handleUnitChange}
       />
     </div>
   )

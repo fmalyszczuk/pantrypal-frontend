@@ -8,15 +8,21 @@ const items = [
   { id: '2', name: 'Eggs', quantity: 12, unit: '', purchased: true },
 ]
 
+const noop = () => {}
+
 test('renders every item', () => {
-  render(<ShoppingList items={items} onTogglePurchased={() => {}} onDelete={() => {}} />)
+  render(
+    <ShoppingList items={items} onTogglePurchased={noop} onDelete={noop} onChangeUnit={noop} />,
+  )
 
   expect(screen.getByText(/milk/i)).toBeInTheDocument()
   expect(screen.getByText(/eggs/i)).toBeInTheDocument()
 })
 
 test('shows purchased items as checked', () => {
-  render(<ShoppingList items={items} onTogglePurchased={() => {}} onDelete={() => {}} />)
+  render(
+    <ShoppingList items={items} onTogglePurchased={noop} onDelete={noop} onChangeUnit={noop} />,
+  )
 
   const [milkCheckbox, eggsCheckbox] = screen.getAllByRole('checkbox')
   expect(milkCheckbox).not.toBeChecked()
@@ -27,7 +33,14 @@ test('calls onTogglePurchased with the item id when its checkbox is clicked', as
   const onTogglePurchased = vi.fn()
   const user = userEvent.setup()
 
-  render(<ShoppingList items={items} onTogglePurchased={onTogglePurchased} onDelete={() => {}} />)
+  render(
+    <ShoppingList
+      items={items}
+      onTogglePurchased={onTogglePurchased}
+      onDelete={noop}
+      onChangeUnit={noop}
+    />,
+  )
 
   await user.click(screen.getAllByRole('checkbox')[0])
 
@@ -38,15 +51,35 @@ test('calls onDelete with the item id when delete is clicked', async () => {
   const onDelete = vi.fn()
   const user = userEvent.setup()
 
-  render(<ShoppingList items={items} onTogglePurchased={() => {}} onDelete={onDelete} />)
+  render(
+    <ShoppingList items={items} onTogglePurchased={noop} onDelete={onDelete} onChangeUnit={noop} />,
+  )
 
   await user.click(screen.getByRole('button', { name: /delete milk/i }))
 
   expect(onDelete).toHaveBeenCalledWith('1')
 })
 
+test('calls onChangeUnit with the item id and the newly selected unit', async () => {
+  const onChangeUnit = vi.fn()
+  const user = userEvent.setup()
+
+  render(
+    <ShoppingList
+      items={items}
+      onTogglePurchased={noop}
+      onDelete={noop}
+      onChangeUnit={onChangeUnit}
+    />,
+  )
+
+  await user.selectOptions(screen.getAllByRole('combobox')[0], 'kg')
+
+  expect(onChangeUnit).toHaveBeenCalledWith('1', 'kg')
+})
+
 test('shows an empty state message when there are no items', () => {
-  render(<ShoppingList items={[]} onTogglePurchased={() => {}} onDelete={() => {}} />)
+  render(<ShoppingList items={[]} onTogglePurchased={noop} onDelete={noop} onChangeUnit={noop} />)
 
   expect(screen.getByText(/empty/i)).toBeInTheDocument()
 })

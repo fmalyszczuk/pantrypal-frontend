@@ -60,3 +60,21 @@ test('deleting an item calls the API with the item name, not id', async () => {
   expect(deleteShoppingListItem).toHaveBeenCalledWith('eggs')
   expect(screen.queryByText(/eggs/i)).not.toBeInTheDocument()
 })
+
+test('changing a unit sends only the unit and displays the converted quantity from the response', async () => {
+  updateShoppingListItem.mockResolvedValue({
+    id: 1,
+    name: 'eggs',
+    quantity: 0.907,
+    unit: 'kg',
+    purchased: false,
+  })
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+  await user.selectOptions(screen.getAllByRole('combobox')[0], 'kg')
+
+  expect(updateShoppingListItem).toHaveBeenCalledWith('eggs', { unit: 'kg' })
+  expect(await screen.findByText('0.907')).toBeInTheDocument()
+})

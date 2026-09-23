@@ -1,7 +1,7 @@
 import ShoppingListItem from './ShoppingListItem.jsx'
 import './ShoppingList.css'
 
-function ShoppingList({ items, onTogglePurchased, onDelete }) {
+function ShoppingList({ items, onTogglePurchased, onDelete, onChangeUnit }) {
   if (items.length === 0) {
     return <p className="shopping-list__empty">Your shopping list is empty.</p>
   }
@@ -14,6 +14,7 @@ function ShoppingList({ items, onTogglePurchased, onDelete }) {
           item={item}
           onTogglePurchased={onTogglePurchased}
           onDelete={onDelete}
+          onChangeUnit={onChangeUnit}
         />
       ))}
     </ul>
