@@ -62,19 +62,29 @@ test('deleting an item calls the API with the item name, not id', async () => {
 })
 
 test('changing a unit sends only the unit and displays the converted quantity from the response', async () => {
+  // eggs is `pcs` (locked, no dropdown); flour is `g` (weight, editable).
   updateShoppingListItem.mockResolvedValue({
-    id: 1,
-    name: 'eggs',
-    quantity: 0.907,
+    id: 2,
+    name: 'flour',
+    quantity: 0.2,
     unit: 'kg',
     purchased: false,
   })
   const user = userEvent.setup()
   render(<ShoppingListPage />)
 
-  await screen.findByText(/eggs/i)
+  await screen.findByText(/flour/i)
   await user.selectOptions(screen.getAllByRole('combobox')[0], 'kg')
 
-  expect(updateShoppingListItem).toHaveBeenCalledWith('eggs', { unit: 'kg' })
-  expect(await screen.findByText('0.907')).toBeInTheDocument()
+  expect(updateShoppingListItem).toHaveBeenCalledWith('flour', { unit: 'kg' })
+  expect(await screen.findByText('0.2')).toBeInTheDocument()
+})
+
+test('locks the unit control for items with no weight/volume unit', async () => {
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+
+  // eggs is `pcs`, so it has no editable unit control — only flour's does.
+  expect(screen.getAllByRole('combobox')).toHaveLength(1)
 })

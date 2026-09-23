@@ -73,9 +73,19 @@ test('calls onChangeUnit with the item id and the newly selected unit', async ()
     />,
   )
 
-  await user.selectOptions(screen.getAllByRole('combobox')[0], 'kg')
+  // Milk is `l` (volume), so its dropdown only offers other volume units.
+  await user.selectOptions(screen.getAllByRole('combobox')[0], 'ml')
 
-  expect(onChangeUnit).toHaveBeenCalledWith('1', 'kg')
+  expect(onChangeUnit).toHaveBeenCalledWith('1', 'ml')
+})
+
+test('locks the unit control for items with no weight/volume unit', () => {
+  render(
+    <ShoppingList items={items} onTogglePurchased={noop} onDelete={noop} onChangeUnit={noop} />,
+  )
+
+  // Eggs has no unit, so it gets no dropdown — only Milk (volume) does.
+  expect(screen.getAllByRole('combobox')).toHaveLength(1)
 })
 
 test('shows an empty state message when there are no items', () => {

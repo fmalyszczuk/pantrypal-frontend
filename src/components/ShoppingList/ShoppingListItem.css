@@ -40,6 +40,13 @@
   background: #fff;
 }
 
+.shopping-item__unit--locked {
+  border: none;
+  padding: 0.15rem 0;
+  color: #999;
+  cursor: default;
+}
+
 .shopping-item__delete {
   border: none;
   background: none;
