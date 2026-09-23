@@ -1,5 +1,26 @@
+.shopping-list-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
 .shopping-list-page__title {
-  margin: 0 0 1rem;
+  margin: 0;
+}
+
+.shopping-list-page__clear {
+  border: 1px solid #f3b8b3;
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.shopping-list-page__clear:hover {
+  background: #fbd9d5;
 }
 
 .shopping-list-page__status {

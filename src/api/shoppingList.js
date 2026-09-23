@@ -24,3 +24,10 @@ export function updateShoppingListItem(name, updates) {
 export function deleteShoppingListItem(name) {
   return deleteResource(`/shopping-list/items/${encodeURIComponent(name)}`)
 }
+
+// Wipes every item on the list in one call. Per ../../README.md, this is a
+// hard delete with no confirmation or undo at the API level — the frontend
+// is responsible for confirming with the user before calling this.
+export function clearShoppingList() {
+  return deleteResource('/shopping-list')
+}

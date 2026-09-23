@@ -6,12 +6,14 @@ import {
   getShoppingList,
   updateShoppingListItem,
   deleteShoppingListItem,
+  clearShoppingList,
 } from '../api/shoppingList.js'
 
 vi.mock('../api/shoppingList.js', () => ({
   getShoppingList: vi.fn(),
   updateShoppingListItem: vi.fn(),
   deleteShoppingListItem: vi.fn(),
+  clearShoppingList: vi.fn(),
 }))
 
 const items = [
@@ -20,9 +22,12 @@ const items = [
 ]
 
 beforeEach(() => {
+  vi.clearAllMocks()
   getShoppingList.mockResolvedValue(items)
   updateShoppingListItem.mockResolvedValue({})
   deleteShoppingListItem.mockResolvedValue(null)
+  clearShoppingList.mockResolvedValue(null)
+  vi.spyOn(window, 'confirm').mockReturnValue(true)
 })
 
 test('loads and displays the shopping list', async () => {
@@ -87,4 +92,51 @@ test('locks the unit control for items with no weight/volume unit', async () => 
 
   // eggs is `pcs`, so it has no editable unit control — only flour's does.
   expect(screen.getAllByRole('combobox')).toHaveLength(1)
+})
+
+test('clicking "Clear list" asks for confirmation, then clears everything', async () => {
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+  await user.click(screen.getByRole('button', { name: /clear list/i }))
+
+  expect(window.confirm).toHaveBeenCalled()
+  expect(clearShoppingList).toHaveBeenCalled()
+  expect(screen.queryByText(/eggs/i)).not.toBeInTheDocument()
+  expect(screen.queryByText(/flour/i)).not.toBeInTheDocument()
+  expect(screen.getByText(/empty/i)).toBeInTheDocument()
+})
+
+test('declining the confirmation leaves the list untouched', async () => {
+  window.confirm.mockReturnValue(false)
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+  await user.click(screen.getByRole('button', { name: /clear list/i }))
+
+  expect(clearShoppingList).not.toHaveBeenCalled()
+  expect(screen.getByText(/eggs/i)).toBeInTheDocument()
+})
+
+test('restores the list if clearing fails on the backend', async () => {
+  clearShoppingList.mockRejectedValue(new Error('backend is down'))
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+  await user.click(screen.getByRole('button', { name: /clear list/i }))
+
+  expect(await screen.findByText(/eggs/i)).toBeInTheDocument()
+  expect(screen.getByText(/flour/i)).toBeInTheDocument()
+})
+
+test('the clear button is not shown when the list is already empty', async () => {
+  getShoppingList.mockResolvedValue([])
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/empty/i)
+
+  expect(screen.queryByRole('button', { name: /clear list/i })).not.toBeInTheDocument()
 })

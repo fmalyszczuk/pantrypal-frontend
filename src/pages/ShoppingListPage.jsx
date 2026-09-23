@@ -4,6 +4,7 @@ import {
   getShoppingList,
   updateShoppingListItem,
   deleteShoppingListItem,
+  clearShoppingList,
 } from '../api/shoppingList.js'
 import './ShoppingListPage.css'
 
@@ -78,6 +79,26 @@ function ShoppingListPage() {
     })
   }
 
+  function handleClearAll() {
+    if (items.length === 0) return
+
+    const confirmed = window.confirm(
+      "Clear the entire shopping list? This can't be undone.",
+    )
+    if (!confirmed) return
+
+    // Unlike a single toggle/delete, this wipes everything — worth rolling
+    // back on failure rather than leaving the user thinking it's gone when
+    // the backend still has it.
+    const previousItems = items
+    setItems([])
+
+    clearShoppingList().catch((err) => {
+      console.warn('Could not clear the shopping list on the backend:', err.message)
+      setItems(previousItems)
+    })
+  }
+
   if (status === 'loading') {
     return <p className="shopping-list-page__status">Loading your shopping list…</p>
   }
@@ -92,7 +113,18 @@ function ShoppingListPage() {
 
   return (
     <div className="shopping-list-page">
-      <h1 className="shopping-list-page__title">Shopping List</h1>
+      <div className="shopping-list-page__header">
+        <h1 className="shopping-list-page__title">Shopping List</h1>
+        {items.length > 0 && (
+          <button
+            type="button"
+            className="shopping-list-page__clear"
+            onClick={handleClearAll}
+          >
+            Clear list
+          </button>
+        )}
+      </div>
       <ShoppingList
         items={items}
         onTogglePurchased={handleTogglePurchased}
