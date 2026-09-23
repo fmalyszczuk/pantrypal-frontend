@@ -1,0 +1,13 @@
+.ingredient-list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.ingredient-list__item {
+  padding: 0.15rem 0;
+}
+
+.ingredient-list__empty {
+  color: #666;
+}

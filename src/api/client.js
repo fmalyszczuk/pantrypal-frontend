@@ -7,7 +7,11 @@ export async function request(path, options = {}) {
     const message = await response.text().catch(() => '')
     throw new Error(message || `Request failed with status ${response.status}`)
   }
-  return response.json()
+  if (response.status === 204) {
+    return null
+  }
+  const text = await response.text()
+  return text ? JSON.parse(text) : null
 }
 
 export function postJson(path, body) {
@@ -16,4 +20,16 @@ export function postJson(path, body) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
+}
+
+export function patchJson(path, body) {
+  return request(path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
+export function deleteResource(path) {
+  return request(path, { method: 'DELETE' })
 }

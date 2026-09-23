@@ -1,0 +1,11 @@
+.shopping-list-page__title {
+  margin: 0 0 1rem;
+}
+
+.shopping-list-page__status {
+  color: #555;
+}
+
+.shopping-list-page__status--error {
+  color: #c0392b;
+}

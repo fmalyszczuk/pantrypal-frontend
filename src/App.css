@@ -3,3 +3,30 @@
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
+.app__nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.75rem;
+}
+
+.app__nav-button {
+  padding: 0.5rem 0.9rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: none;
+  color: #444;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.app__nav-button:hover {
+  background: #f0f0f0;
+}
+
+.app__nav-button--active {
+  background: #2d6cdf;
+  color: #fff;
+}
