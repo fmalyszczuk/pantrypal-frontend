@@ -1,12 +1,16 @@
 import './HomePage.css'
 
-// `available: false` marks ways with no backend support yet — see
-// ../../README.md's "What's NOT built yet": POST /recipes/from-text and
-// POST /recipes/from-file aren't implemented. Flip this once they are.
+// `available: false` marks ways with no frontend UI wired up yet, even where
+// the backend endpoint exists (see ../../README.md). Flip this once wired.
 const WAYS_TO_ADD = [
   {
     title: 'Paste a link',
     description: 'Drop in a recipe URL and we pull the ingredients out for you.',
+    available: true,
+  },
+  {
+    title: 'Type it in',
+    description: 'Enter a recipe title and its ingredients by hand.',
     available: true,
   },
   {

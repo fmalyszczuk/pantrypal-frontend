@@ -8,11 +8,14 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 ## Features
 
-- Add a recipe from a URL, a text/name search, or an uploaded file
+- Add a recipe from a URL, or by typing its title and ingredients in by hand
 - View extracted ingredients per recipe
 - Auto-merged shopping list across recipes, with quantity/unit aggregation
-- Edit, update units, and clear items on the shopping list
-- Chat-style interface for interacting with the assistant
+- Automatic unit conversion within the same family (weight: mg/g/kg/lb; volume:
+  ml/l/pint/oz/tsp/tbsp/cup) — count-based units like `pcs` are left alone
+- Mark items purchased, edit quantity/unit, or clear the whole list
+- Chat-style interface for managing the shopping list in plain English, backed by the
+  backend's local LLM (Ollama) tool-calling `/chat` endpoint
 
 ## Tech stack
 
@@ -26,7 +29,9 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 ### Prerequisites
 
 - Node.js and npm
-- The [backend](link here) running locally (defaults to `localhost:8080`)
+- The [backend](https://github.com/fmalyszczuk/ingredients-retriever) running locally
+  (defaults to `localhost:8080`); requires Java 21, and [Ollama](https://ollama.com)
+  running locally if you want the `/chat` feature to work
 
 ### Install and run
 
@@ -63,15 +68,21 @@ src/
 The frontend calls the backend under an `/api` prefix; the dev proxy strips `/api` before
 forwarding, so it never collides with frontend routes.
 
-| Method | Endpoint              | Description                         |
-| ------ | ---------------------- | ------------------------------------ |
-| POST   | `/recipes/from-url`    | Extract a recipe from a URL          |
-| POST   | `/recipes/from-text`   | Extract a recipe from a name/search  |
-| POST   | `/recipes/from-file`   | Extract a recipe from an uploaded file |
-| GET    | `/shopping-list`       | Get the merged shopping list         |
+| Method   | Endpoint                       | Description                                        |
+| -------- | ------------------------------- | --------------------------------------------------- |
+| GET      | `/shopping-list`                | Get the merged shopping list                        |
+| POST     | `/shopping-list/items`          | Add an item (sums into an existing one by name)     |
+| PATCH    | `/shopping-list/items/{name}`   | Update quantity, unit, or purchased status           |
+| DELETE   | `/shopping-list/items/{name}`   | Remove one item                                      |
+| DELETE   | `/shopping-list`                | Clear the whole list                                 |
+| GET      | `/recipes`                      | List saved recipes                                   |
+| POST     | `/recipes`                      | Add a recipe by typing in its ingredients            |
+| POST     | `/recipes/from-url`             | Add a recipe by scraping a recipe page               |
+| POST     | `/recipes/from-text`            | Add a recipe from a dish name (LLM-suggested)        |
+| POST     | `/chat`                         | Talk to the shopping list in plain English           |
 
 The backend's OpenAPI/controllers are the source of truth for the contract — see the
-[backend repo](link here).
+[backend repo](https://github.com/fmalyszczuk/ingredients-retriever).
 
 ## Conventions
 
