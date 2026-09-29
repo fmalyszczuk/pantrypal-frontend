@@ -4,6 +4,12 @@ export function extractFromUrl(url) {
   return postJson('/recipes/from-url', { url })
 }
 
+// POST /recipes: manual entry, no LLM/scraping involved. ingredients is a
+// list of { name, quantity, unit } — quantity/unit are optional per item.
+export function createManualRecipe({ title, ingredients }) {
+  return postJson('/recipes', { title, ingredients })
+}
+
 export function extractFromText(query) {
   return postJson('/recipes/from-text', { query })
 }

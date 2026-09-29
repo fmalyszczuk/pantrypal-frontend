@@ -1,0 +1,96 @@
+.manual-recipe-form__label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.manual-recipe-form__title-input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.manual-recipe-form__ingredients {
+  margin-bottom: 1rem;
+}
+
+.manual-recipe-form__row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.manual-recipe-form__name-input {
+  flex: 2;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.manual-recipe-form__quantity-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.manual-recipe-form__unit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.manual-recipe-form__remove {
+  border: none;
+  background: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 0.4rem;
+}
+
+.manual-recipe-form__remove:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.manual-recipe-form__add {
+  border: 1px dashed #999;
+  background: none;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.manual-recipe-form__submit {
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: #2d6cdf;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.manual-recipe-form__submit:disabled {
+  background: #a9c2ea;
+  cursor: not-allowed;
+}
+
+.manual-recipe-form__error {
+  color: #c0392b;
+  margin: 0.5rem 0 0;
+}
