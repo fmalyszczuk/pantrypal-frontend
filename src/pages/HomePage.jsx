@@ -20,8 +20,8 @@ const WAYS_TO_ADD = [
   },
   {
     title: 'Upload a file',
-    description: 'Snap a cookbook page or upload a screenshot or PDF.',
-    available: false,
+    description: 'Upload a PDF, DOCX, TXT, or a photo/screenshot of a recipe.',
+    available: true,
   },
 ]
 
