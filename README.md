@@ -8,7 +8,8 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 ## Features
 
-- Add a recipe from a URL, or by typing its title and ingredients in by hand
+- Add a recipe from a URL, by typing its title and ingredients in by hand, or by
+  uploading a PDF, DOCX, TXT, or a photo/screenshot
 - View extracted ingredients per recipe
 - Auto-merged shopping list across recipes, with quantity/unit aggregation
 - Automatic unit conversion within the same family (weight: mg/g/kg/lb; volume:
