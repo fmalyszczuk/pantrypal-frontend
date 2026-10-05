@@ -4,6 +4,7 @@ import { vi } from 'vitest'
 import ShoppingListPage from './ShoppingListPage.jsx'
 import {
   getShoppingList,
+  addShoppingListItem,
   updateShoppingListItem,
   deleteShoppingListItem,
   clearShoppingList,
@@ -11,6 +12,7 @@ import {
 
 vi.mock('../api/shoppingList.js', () => ({
   getShoppingList: vi.fn(),
+  addShoppingListItem: vi.fn(),
   updateShoppingListItem: vi.fn(),
   deleteShoppingListItem: vi.fn(),
   clearShoppingList: vi.fn(),
@@ -24,6 +26,7 @@ const items = [
 beforeEach(() => {
   vi.clearAllMocks()
   getShoppingList.mockResolvedValue(items)
+  addShoppingListItem.mockResolvedValue({})
   updateShoppingListItem.mockResolvedValue({})
   deleteShoppingListItem.mockResolvedValue(null)
   clearShoppingList.mockResolvedValue(null)
@@ -43,6 +46,49 @@ test('shows an error message when the list fails to load', async () => {
   render(<ShoppingListPage />)
 
   expect(await screen.findByText(/backend is down/i)).toBeInTheDocument()
+})
+
+test('adding a new item appends it to the list', async () => {
+  addShoppingListItem.mockResolvedValue({
+    id: 3,
+    name: 'milk',
+    quantity: 1,
+    unit: 'l',
+    purchased: false,
+  })
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/eggs/i)
+  await user.type(screen.getByLabelText(/item name/i), 'milk')
+  await user.type(screen.getByLabelText(/item quantity/i), '1')
+  await user.type(screen.getByLabelText(/item unit/i), 'l')
+  await user.click(screen.getByRole('button', { name: /add item/i }))
+
+  expect(addShoppingListItem).toHaveBeenCalledWith({ name: 'milk', quantity: 1, unit: 'l' })
+  expect(await screen.findByText(/milk/i)).toBeInTheDocument()
+  expect(screen.getByText(/eggs/i)).toBeInTheDocument()
+})
+
+test('adding an item that merges into an existing one updates it in place instead of duplicating it', async () => {
+  addShoppingListItem.mockResolvedValue({
+    id: 2,
+    name: 'flour',
+    quantity: 400,
+    unit: 'g',
+    purchased: false,
+  })
+  const user = userEvent.setup()
+  render(<ShoppingListPage />)
+
+  await screen.findByText(/flour/i)
+  await user.type(screen.getByLabelText(/item name/i), 'flour')
+  await user.type(screen.getByLabelText(/item quantity/i), '200')
+  await user.type(screen.getByLabelText(/item unit/i), 'g')
+  await user.click(screen.getByRole('button', { name: /add item/i }))
+
+  expect(await screen.findByText('400')).toBeInTheDocument()
+  expect(screen.getAllByText(/flour/i)).toHaveLength(1)
 })
 
 test('toggling purchased calls the API with the item name, not id', async () => {
