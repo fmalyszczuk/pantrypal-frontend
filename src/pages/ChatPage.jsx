@@ -1,24 +1,20 @@
 import { useState } from 'react'
 import ChatWindow from '../components/Chat/ChatWindow.jsx'
 import ChatInput from '../components/Chat/ChatInput.jsx'
-import { sendChatMessage } from '../api/chat.js'
+import { sendChatMessage, forgetConversation } from '../api/chat.js'
 import { useLocalStorageState } from '../hooks/useLocalStorageState.js'
 import './ChatPage.css'
 
-// Confirmed against ../../README.md: POST /chat is real and matches this
-// shape. Its reply text isn't always accurate about the resulting shopping-
-// list state (the backend can under/over-describe what it changed), so once
-// this page shares state with the shopping list, re-fetch GET /shopping-list
-// after a reply rather than trusting response.reply for the list contents.
-
-// The backend has no chat-history storage (each /chat call is just
-// { message } -> { reply }, no history param), so this is purely a
-// frontend convenience: it persists to this browser only, not synced with
-// the backend or other devices.
+// The displayed messages are a frontend-only convenience (see ../../README.md:
+// the backend has no endpoint to fetch history back). The conversationId is
+// what actually gives the backend memory: send back the id it returned so
+// follow-ups like "make it 3 kg" resolve against the same conversation.
 const HISTORY_KEY = 'pantrypal:chat-history'
+const CONVERSATION_ID_KEY = 'pantrypal:chat-conversation-id'
 
 function ChatPage() {
   const [messages, setMessages] = useLocalStorageState(HISTORY_KEY, [])
+  const [conversationId, setConversationId] = useLocalStorageState(CONVERSATION_ID_KEY, null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -28,8 +24,9 @@ function ChatPage() {
     setError(null)
     setIsLoading(true)
 
-    sendChatMessage(text)
+    sendChatMessage(text, conversationId)
       .then((response) => {
+        setConversationId(response.conversationId)
         setMessages((current) => [
           ...current,
           { id: crypto.randomUUID(), role: 'assistant', text: response.reply },
@@ -41,6 +38,20 @@ function ChatPage() {
       .finally(() => setIsLoading(false))
   }
 
+  function handleClear() {
+    setMessages([])
+    // Best-effort: the visible history is already gone either way, since it
+    // only ever lived in localStorage. This just tells the backend to drop
+    // its memory of the conversation too, so a stale conversationId isn't
+    // reused by accident.
+    if (conversationId) {
+      forgetConversation(conversationId).catch((err) => {
+        console.warn('Could not forget the conversation on the backend:', err.message)
+      })
+    }
+    setConversationId(null)
+  }
+
   return (
     <div className="chat-page">
       <div className="chat-page__header">
@@ -49,7 +60,7 @@ function ChatPage() {
           <button
             type="button"
             className="chat-page__clear"
-            onClick={() => setMessages([])}
+            onClick={handleClear}
           >
             Clear chat
           </button>

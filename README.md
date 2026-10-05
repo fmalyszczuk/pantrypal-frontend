@@ -18,7 +18,9 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
   ml/l/pint/oz/tsp/tbsp/cup) — count-based units like `pcs` are left alone
 - Mark items purchased, edit quantity/unit, or clear the whole list
 - Chat-style interface for managing the shopping list in plain English, backed by the
-  backend's local LLM (Ollama) tool-calling `/chat` endpoint
+  backend's local LLM (Ollama) tool-calling `/chat` endpoint. The conversation is
+  remembered server-side across messages (via `conversationId`), so follow-ups like
+  "make it 3 kg" work; clearing the chat also forgets it on the backend
 
 ## Tech stack
 
@@ -85,7 +87,8 @@ forwarding, so it never collides with frontend routes.
 | POST     | `/recipes/from-url`             | Add a recipe by scraping a recipe page               |
 | POST     | `/recipes/from-text`            | Add a recipe from a dish name (LLM-suggested)        |
 | POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, or image |
-| POST     | `/chat`                         | Talk to the shopping list in plain English           |
+| POST     | `/chat`                         | Talk to the shopping list in plain English (optional `conversationId` for memory) |
+| DELETE   | `/chat/{conversationId}`        | Forget a conversation                                |
 
 The backend's OpenAPI/controllers are the source of truth for the contract — see the
 [backend repo](https://github.com/fmalyszczuk/ingredients-retriever).
