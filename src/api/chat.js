@@ -1,8 +1,11 @@
-import { postJson } from './client.js'
+import { postJson, deleteResource } from './client.js'
 
-// NOTE: no chat endpoint is documented in CLAUDE.md's backend contract yet.
-// This assumes POST /chat { message } -> { reply }. Confirm the real
-// path and response shape with the backend before shipping this.
-export function sendChatMessage(message) {
-  return postJson('/chat', { message })
+// conversationId is optional: omit it to start a new conversation, pass the
+// one the backend returned to continue it (see ../../README.md's "/chat").
+export function sendChatMessage(message, conversationId) {
+  return postJson('/chat', conversationId ? { message, conversationId } : { message })
+}
+
+export function forgetConversation(conversationId) {
+  return deleteResource(`/chat/${conversationId}`)
 }
