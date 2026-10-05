@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import HomePage from './pages/HomePage.jsx'
 import AddRecipePage from './pages/AddRecipePage.jsx'
+import RecipesPage from './pages/RecipesPage.jsx'
 import ShoppingListPage from './pages/ShoppingListPage.jsx'
 import ChatPage from './pages/ChatPage.jsx'
 
@@ -10,6 +11,7 @@ import ChatPage from './pages/ChatPage.jsx'
 const PAGES = {
   home: { label: 'Home', component: HomePage },
   addRecipe: { label: 'Add Recipe', component: AddRecipePage },
+  recipes: { label: 'My Recipes', component: RecipesPage },
   shoppingList: { label: 'Shopping List', component: ShoppingListPage },
   chat: { label: 'Chat', component: ChatPage },
 }

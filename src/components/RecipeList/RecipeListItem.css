@@ -1,0 +1,40 @@
+.recipe-list-item {
+  padding: 1rem 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.recipe-list-item__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-list-item__title {
+  margin: 0 0 0.15rem;
+  font-size: 1.05rem;
+}
+
+.recipe-list-item__meta {
+  margin: 0;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.recipe-list-item__delete {
+  flex-shrink: 0;
+  border: 1px solid #f3b8b3;
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.recipe-list-item__delete:hover {
+  background: #fbd9d5;
+}
