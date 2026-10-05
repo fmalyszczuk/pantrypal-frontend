@@ -15,6 +15,7 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 - Browse your saved recipes and delete one, optionally subtracting its ingredients
   from the shopping list too
 - Auto-merged shopping list across recipes, with quantity/unit aggregation
+- Add a one-off item straight to the shopping list without going through a recipe
 - Automatic unit conversion within the same family (weight: mg/g/kg/lb; volume:
   ml/l/pint/oz/tsp/tbsp/cup) — count-based units like `pcs` are left alone
 - Mark items purchased, edit quantity/unit, or clear the whole list

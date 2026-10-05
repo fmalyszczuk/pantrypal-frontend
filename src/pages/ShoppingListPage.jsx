@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import ShoppingList from '../components/ShoppingList/ShoppingList.jsx'
+import AddItemForm from '../components/ShoppingList/AddItemForm.jsx'
 import {
   getShoppingList,
+  addShoppingListItem,
   updateShoppingListItem,
   deleteShoppingListItem,
   clearShoppingList,
@@ -32,6 +34,19 @@ function ShoppingListPage() {
       cancelled = true
     }
   }, [])
+
+  function handleAddItem({ name, quantity, unit }) {
+    // The backend may merge this into an existing item (same name, compatible
+    // unit) rather than creating a new row, so the response's id might match
+    // one already in state — replace it in place rather than always appending.
+    return addShoppingListItem({ name, quantity, unit }).then((item) => {
+      setItems((current) => {
+        const index = current.findIndex((existing) => existing.id === item.id)
+        if (index === -1) return [...current, item]
+        return current.map((existing, i) => (i === index ? item : existing))
+      })
+    })
+  }
 
   function handleTogglePurchased(itemId) {
     const target = items.find((item) => item.id === itemId)
@@ -125,6 +140,7 @@ function ShoppingListPage() {
           </button>
         )}
       </div>
+      <AddItemForm onAdd={handleAddItem} />
       <ShoppingList
         items={items}
         onTogglePurchased={handleTogglePurchased}

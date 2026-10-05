@@ -1,0 +1,53 @@
+.add-item-form__row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.add-item-form__name-input {
+  flex: 2;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.add-item-form__quantity-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.add-item-form__unit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.add-item-form__submit {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: #2d6cdf;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.add-item-form__submit:disabled {
+  background: #a9c2ea;
+  cursor: not-allowed;
+}
+
+.add-item-form__error {
+  color: #c0392b;
+  margin: -0.5rem 0 1rem;
+}
