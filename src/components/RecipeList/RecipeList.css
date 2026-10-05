@@ -1,0 +1,9 @@
+.recipe-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recipe-list__empty {
+  color: #666;
+}

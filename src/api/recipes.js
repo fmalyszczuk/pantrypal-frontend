@@ -1,4 +1,17 @@
-import { postJson, request } from './client.js'
+import { postJson, request, deleteResource } from './client.js'
+
+export function listRecipes() {
+  return request('/recipes')
+}
+
+// DELETE /recipes/{id}: 204 on success, 404 if the id doesn't exist.
+// removeFromShoppingList also subtracts the recipe's ingredients from the
+// shopping list; left off (the default), the recipe is deleted but the
+// shopping list is untouched.
+export function deleteRecipe(id, { removeFromShoppingList = false } = {}) {
+  const query = removeFromShoppingList ? '?removeFromShoppingList=true' : ''
+  return deleteResource(`/recipes/${id}${query}`)
+}
 
 export function extractFromUrl(url) {
   return postJson('/recipes/from-url', { url })

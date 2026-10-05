@@ -1,0 +1,11 @@
+.recipes-page__title {
+  margin: 0 0 1rem;
+}
+
+.recipes-page__status {
+  color: #555;
+}
+
+.recipes-page__status--error {
+  color: #c0392b;
+}

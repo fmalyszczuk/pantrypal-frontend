@@ -11,6 +11,8 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 - Add a recipe from a URL, by typing its title and ingredients in by hand, or by
   uploading a PDF, DOCX, TXT, or a photo/screenshot
 - View extracted ingredients per recipe
+- Browse your saved recipes and delete one, optionally subtracting its ingredients
+  from the shopping list too
 - Auto-merged shopping list across recipes, with quantity/unit aggregation
 - Automatic unit conversion within the same family (weight: mg/g/kg/lb; volume:
   ml/l/pint/oz/tsp/tbsp/cup) — count-based units like `pcs` are left alone
@@ -77,9 +79,12 @@ forwarding, so it never collides with frontend routes.
 | DELETE   | `/shopping-list/items/{name}`   | Remove one item                                      |
 | DELETE   | `/shopping-list`                | Clear the whole list                                 |
 | GET      | `/recipes`                      | List saved recipes                                   |
+| GET      | `/recipes/{id}`                 | Get one recipe                                        |
+| DELETE   | `/recipes/{id}`                 | Delete a recipe (`?removeFromShoppingList=true` also subtracts its ingredients) |
 | POST     | `/recipes`                      | Add a recipe by typing in its ingredients            |
 | POST     | `/recipes/from-url`             | Add a recipe by scraping a recipe page               |
 | POST     | `/recipes/from-text`            | Add a recipe from a dish name (LLM-suggested)        |
+| POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, or image |
 | POST     | `/chat`                         | Talk to the shopping list in plain English           |
 
 The backend's OpenAPI/controllers are the source of truth for the contract — see the
