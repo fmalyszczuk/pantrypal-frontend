@@ -11,8 +11,18 @@
   justify-content: flex-start;
 }
 
-.chat-message__bubble {
+.chat-message__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   max-width: 32rem;
+}
+
+.chat-message--user .chat-message__content {
+  align-items: flex-end;
+}
+
+.chat-message__bubble {
   padding: 0.6rem 0.9rem;
   border-radius: 0.9rem;
   white-space: pre-wrap;
@@ -31,4 +41,72 @@
 .chat-message--pending .chat-message__bubble {
   color: #777;
   font-style: italic;
+}
+
+.chat-message__bubble--incomplete {
+  border: 1px dashed #d9a441;
+  background: #fdf3e2;
+}
+
+.chat-message__actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.chat-message__action {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.chat-message__action--ok {
+  color: #2a7a3b;
+}
+
+.chat-message__action--error {
+  color: #c0392b;
+}
+
+.chat-message__action--confirmation_required {
+  color: #a9710a;
+}
+
+.chat-message__action--not_confirmed {
+  color: #888;
+}
+
+.chat-message__note {
+  font-size: 0.8rem;
+  color: #2a7a3b;
+}
+
+.chat-message__confirm {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.chat-message__confirm-button {
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.chat-message__confirm-button--yes {
+  background: #2d6cdf;
+  color: #fff;
+}
+
+.chat-message__confirm-button--no {
+  background: #e5e5e5;
+  color: #333;
+}
+
+.chat-message__confirm-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

@@ -21,6 +21,9 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
   backend's local LLM (Ollama) tool-calling `/chat` endpoint. The conversation is
   remembered server-side across messages (via `conversationId`), so follow-ups like
   "make it 3 kg" work; clearing the chat also forgets it on the backend
+- Chat replies show which tools actually ran and their outcome, flag when the shopping
+  list changed, and offer quick Yes/No buttons when a destructive action (clearing the
+  list, deleting a recipe) needs confirmation before it runs
 
 ## Tech stack
 
