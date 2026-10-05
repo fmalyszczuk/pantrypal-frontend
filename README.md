@@ -8,8 +8,9 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 ## Features
 
-- Add a recipe from a URL, by typing its title and ingredients in by hand, or by
-  uploading a PDF, DOCX, TXT, or a photo/screenshot
+- Add a recipe from a URL, by typing its title and ingredients in by hand, by
+  uploading a PDF, DOCX, TXT, or a photo/screenshot, or by searching a dish name
+  for an LLM-suggested ingredient list
 - View extracted ingredients per recipe
 - Browse your saved recipes and delete one, optionally subtracting its ingredients
   from the shopping list too
