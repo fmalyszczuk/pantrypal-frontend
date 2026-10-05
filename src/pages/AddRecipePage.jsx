@@ -2,6 +2,7 @@ import { useState } from 'react'
 import RecipeUrlForm from '../components/RecipeUrlForm/RecipeUrlForm.jsx'
 import ManualRecipeForm from '../components/ManualRecipeForm/ManualRecipeForm.jsx'
 import FileRecipeForm from '../components/FileRecipeForm/FileRecipeForm.jsx'
+import RecipeTextForm from '../components/RecipeTextForm/RecipeTextForm.jsx'
 import IngredientList from '../components/IngredientList/IngredientList.jsx'
 import './AddRecipePage.css'
 
@@ -9,6 +10,7 @@ const MODES = {
   url: { label: 'From URL', component: RecipeUrlForm },
   manual: { label: 'Type it in', component: ManualRecipeForm },
   file: { label: 'Upload a file', component: FileRecipeForm },
+  text: { label: 'Search by name', component: RecipeTextForm },
 }
 
 function AddRecipePage() {

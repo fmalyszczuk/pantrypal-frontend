@@ -23,8 +23,10 @@ export function createManualRecipe({ title, ingredients }) {
   return postJson('/recipes', { title, ingredients })
 }
 
-export function extractFromText(query) {
-  return postJson('/recipes/from-text', { query })
+// POST /recipes/from-text: field is `text` (max 200 chars), e.g. a dish name
+// like "spaghetti carbonara" — the backend's LLM suggests the ingredients.
+export function extractFromText(text) {
+  return postJson('/recipes/from-text', { text })
 }
 
 export function extractFromFile(file) {
