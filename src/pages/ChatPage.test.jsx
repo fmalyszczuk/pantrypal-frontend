@@ -58,6 +58,32 @@ test('clearing the chat forgets the conversation on the backend and resets local
   expect(sendChatMessage).toHaveBeenLastCalledWith('hello', null)
 })
 
+test('shows a confirmation prompt and sends "yes" when its button is clicked', async () => {
+  sendChatMessage.mockResolvedValue({
+    reply: 'Clear the whole list?',
+    conversationId: 'abc-123',
+    actions: [{ tool: 'clear_list', arguments: {}, status: 'confirmation_required', result: null }],
+  })
+  const user = userEvent.setup()
+
+  render(<ChatPage />)
+
+  await user.type(screen.getByLabelText(/chat message/i), 'clear my list')
+  await user.click(screen.getByRole('button', { name: /send/i }))
+  await screen.findByText(/clear the whole list/i)
+
+  sendChatMessage.mockResolvedValue({
+    reply: 'Cleared it.',
+    conversationId: 'abc-123',
+    shoppingListChanged: true,
+  })
+  await user.click(screen.getByRole('button', { name: /^yes$/i }))
+
+  expect(sendChatMessage).toHaveBeenLastCalledWith('yes', 'abc-123')
+  expect(await screen.findByText(/cleared it/i)).toBeInTheDocument()
+  expect(screen.getByText(/shopping list updated/i)).toBeInTheDocument()
+})
+
 test('shows an error message when the backend call fails', async () => {
   sendChatMessage.mockRejectedValue(new Error('backend is down'))
   const user = userEvent.setup()

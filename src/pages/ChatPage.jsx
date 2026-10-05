@@ -29,7 +29,14 @@ function ChatPage() {
         setConversationId(response.conversationId)
         setMessages((current) => [
           ...current,
-          { id: crypto.randomUUID(), role: 'assistant', text: response.reply },
+          {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            text: response.reply,
+            actions: response.actions,
+            incomplete: response.incomplete,
+            shoppingListChanged: response.shoppingListChanged,
+          },
         ])
       })
       .catch((err) => {
@@ -66,7 +73,7 @@ function ChatPage() {
           </button>
         )}
       </div>
-      <ChatWindow messages={messages} isLoading={isLoading} />
+      <ChatWindow messages={messages} isLoading={isLoading} onQuickReply={handleSend} />
       {error && <p className="chat-page__error">Couldn't get a response: {error}</p>}
       <ChatInput onSend={handleSend} disabled={isLoading} />
     </div>
