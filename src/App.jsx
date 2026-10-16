@@ -6,6 +6,7 @@ import RecipesPage from './pages/RecipesPage.jsx'
 import ShoppingListPage from './pages/ShoppingListPage.jsx'
 import ChatPage from './pages/ChatPage.jsx'
 import AuthPage from './pages/auth/AuthPage.jsx'
+import AccountPage from './pages/auth/AccountPage.jsx'
 import VerifyEmailPage from './pages/auth/VerifyEmailPage.jsx'
 import ResetPasswordPage from './pages/auth/ResetPasswordPage.jsx'
 import { getCsrfToken, getCurrentUser, logout } from './api/auth.js'
@@ -90,7 +91,7 @@ function AuthenticatedApp() {
     return <AuthPage onLoggedIn={handleLoggedIn} />
   }
 
-  const PageComponent = PAGES[page].component
+  const PageComponent = PAGES[page]?.component
 
   return (
     <div className="app">
@@ -106,13 +107,23 @@ function AuthenticatedApp() {
           </button>
         ))}
         <span className="app__nav-spacer" />
-        <span className="app__user">{user.email}</span>
+        <button
+          type="button"
+          className={`app__user${page === 'account' ? ' app__user--active' : ''}`}
+          onClick={() => setPage('account')}
+        >
+          {user.email}
+        </button>
         <button type="button" className="app__nav-button" onClick={handleLogout}>
           Log out
         </button>
       </nav>
       <main className="app__content">
-        <PageComponent />
+        {page === 'account' ? (
+          <AccountPage user={user} onAccountDeleted={handleLogout} />
+        ) : (
+          <PageComponent />
+        )}
       </main>
     </div>
   )

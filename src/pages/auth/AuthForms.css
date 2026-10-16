@@ -89,3 +89,41 @@
   color: #999;
   cursor: not-allowed;
 }
+
+.auth-form__success {
+  color: #2a7a3b;
+  margin: 1rem 0 0;
+}
+
+.account-page {
+  max-width: 24rem;
+  margin: 2rem auto;
+}
+
+.account-page__email {
+  text-align: center;
+  color: #777;
+  margin: 0 0 1.5rem;
+}
+
+.auth-form--section {
+  margin: 0 0 1.5rem;
+}
+
+.auth-form__section-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.auth-form--danger {
+  border-color: #f3b8b3;
+  background: #fff6f6;
+}
+
+.auth-form__submit--danger {
+  background: #c0392b;
+}
+
+.auth-form__submit--danger:disabled {
+  background: #e0a9a2;
+}

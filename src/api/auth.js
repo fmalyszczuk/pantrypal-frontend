@@ -45,3 +45,16 @@ export function forgotPassword(email) {
 export function resetPassword({ token, newPassword }) {
   return postJson('/auth/reset-password', { token, newPassword })
 }
+
+// 204. Needs the current password again (400 "The password is incorrect"
+// if wrong, not 401 — the user is still logged in). Logs out every other
+// session of the user; this one stays logged in.
+export function changePassword({ currentPassword, newPassword }) {
+  return postJson('/auth/password', { currentPassword, newPassword })
+}
+
+// 204. Deletes the account and everything it owns, permanently, and logs
+// out every session including this one. Needs the password (400 if wrong).
+export function deleteAccount(password) {
+  return postJson('/auth/delete-account', { password })
+}

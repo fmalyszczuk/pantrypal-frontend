@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { register } from '../../api/auth.js'
+import { retryAfterMessage } from './retryAfterMessage.js'
 import './AuthForms.css'
 
 function RegisterForm({ onRegistered, onSwitchToLogin }) {
@@ -20,11 +21,7 @@ function RegisterForm({ onRegistered, onSwitchToLogin }) {
       await register({ email, password })
       onRegistered(email)
     } catch (err) {
-      setError(
-        err.status === 429
-          ? 'Too many attempts. Please try again later.'
-          : err.message,
-      )
+      setError(err.status === 429 ? retryAfterMessage(err.retryAfterSeconds) : err.message)
       setStatus('error')
     }
   }

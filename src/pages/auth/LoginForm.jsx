@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { login, resendVerification } from '../../api/auth.js'
+import { retryAfterMessage } from './retryAfterMessage.js'
 import './AuthForms.css'
-
-function retryMessage(seconds) {
-  if (!seconds) return 'Too many attempts. Please try again later.'
-  const minutes = Math.ceil(seconds / 60)
-  return `Too many attempts. Please try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`
-}
 
 function LoginForm({ onLoggedIn, onSwitchToRegister, onSwitchToForgotPassword }) {
   const [email, setEmail] = useState('')
@@ -27,7 +22,7 @@ function LoginForm({ onLoggedIn, onSwitchToRegister, onSwitchToForgotPassword })
       if (err.status === 403) {
         setStatus('unverified')
       } else if (err.status === 429) {
-        setError(retryMessage(err.retryAfterSeconds))
+        setError(retryAfterMessage(err.retryAfterSeconds))
         setStatus('error')
       } else {
         setError(err.message)

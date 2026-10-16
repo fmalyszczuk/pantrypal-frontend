@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { forgotPassword } from '../../api/auth.js'
+import { retryAfterMessage } from './retryAfterMessage.js'
 import './AuthForms.css'
 
 function ForgotPasswordForm({ onSubmitted, onSwitchToLogin }) {
@@ -18,11 +19,7 @@ function ForgotPasswordForm({ onSubmitted, onSwitchToLogin }) {
       await forgotPassword(email)
       onSubmitted()
     } catch (err) {
-      setError(
-        err.status === 429
-          ? 'Too many attempts. Please try again later.'
-          : err.message,
-      )
+      setError(err.status === 429 ? retryAfterMessage(err.retryAfterSeconds) : err.message)
       setStatus('error')
     }
   }

@@ -8,8 +8,8 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 ## Features
 
-- Accounts: register, log in/out, email verification, and forgot/reset password —
-  every other feature below requires a logged-in user
+- Accounts: register, log in/out, email verification, forgot/reset password, change
+  password, and delete account — every other feature below requires a logged-in user
 - Add a recipe from a URL, by typing its title and ingredients in by hand, by
   uploading a PDF, DOCX, TXT, or a photo/screenshot, or by searching a dish name
   for an LLM-suggested ingredient list
@@ -100,7 +100,9 @@ sees or stores:
   normal tabbed app, and renders a standalone page instead. Each one reads the token
   from `window.location.search` and immediately strips it with `history.replaceState`
   so it doesn't linger in browser history.
-- Account settings (changing the password, deleting the account) aren't built yet.
+- Account settings: clicking the logged-in email in the nav opens a page to change the
+  password (logs out every other session, this one stays in) or delete the account
+  (asks for the password and a confirm dialog — permanent, no undo).
 
 ## Backend contract
 
@@ -118,6 +120,8 @@ forwarding, so it never collides with frontend routes.
 | POST     | `/auth/forgot-password`         | Email a password reset link — *open*                 |
 | POST     | `/auth/reset-password`          | Set a new password with the emailed token — *open*   |
 | POST     | `/auth/logout`                  | Log out                                               |
+| POST     | `/auth/password`                | Change the password (needs the current one)           |
+| POST     | `/auth/delete-account`          | Delete the account and all its data (needs the password) |
 | GET      | `/shopping-list`                | Get the merged shopping list                        |
 | POST     | `/shopping-list/items`          | Add an item (sums into an existing one by name)     |
 | PATCH    | `/shopping-list/items/{name}`   | Update quantity, unit, or purchased status           |

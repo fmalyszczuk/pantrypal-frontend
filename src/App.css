@@ -37,8 +37,18 @@
 
 .app__user {
   align-self: center;
+  border: none;
+  background: none;
   color: #777;
   font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem 0.4rem;
+}
+
+.app__user--active {
+  color: #2d6cdf;
+  font-weight: 600;
 }
 
 .app__status {
