@@ -11,7 +11,7 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 - Accounts: register, log in/out, email verification, forgot/reset password, change
   password, and delete account — every other feature below requires a logged-in user
 - Add a recipe from a URL, by typing its title and ingredients in by hand, by
-  uploading a PDF, DOCX, TXT, or a photo/screenshot, or by searching a dish name
+  uploading a PDF, DOCX, TXT, MD, or a photo/screenshot, or by searching a dish name
   for an LLM-suggested ingredient list
 - View extracted ingredients per recipe
 - Browse your saved recipes and delete one, optionally subtracting its ingredients
@@ -133,7 +133,7 @@ forwarding, so it never collides with frontend routes.
 | POST     | `/recipes`                      | Add a recipe by typing in its ingredients            |
 | POST     | `/recipes/from-url`             | Add a recipe by scraping a recipe page               |
 | POST     | `/recipes/from-text`            | Add a recipe from a dish name (LLM-suggested)        |
-| POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, or image |
+| POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, MD, or image |
 | POST     | `/chat`                         | Talk to the shopping list in plain English (optional `conversationId` for memory) |
 | DELETE   | `/chat/{conversationId}`        | Forget a conversation                                |
 

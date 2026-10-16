@@ -121,6 +121,8 @@ function AuthenticatedApp() {
       <main className="app__content">
         {page === 'account' ? (
           <AccountPage user={user} onAccountDeleted={handleLogout} />
+        ) : page === 'chat' ? (
+          <ChatPage userId={user.id} />
         ) : (
           <PageComponent />
         )}

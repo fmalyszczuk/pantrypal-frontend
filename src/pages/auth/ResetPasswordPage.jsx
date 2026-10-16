@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { resetPassword } from '../../api/auth.js'
+import { getCsrfToken, resetPassword } from '../../api/auth.js'
 import './AuthForms.css'
 
 function ResetPasswordPage() {
@@ -12,6 +12,11 @@ function ResetPasswordPage() {
     const tokenFromUrl = new URLSearchParams(window.location.search).get('token')
     // Strip it from the address bar right away (see VerifyEmailPage for why).
     window.history.replaceState(null, '', window.location.pathname)
+
+    // Reached straight from an email link, bypassing the normal app startup
+    // that primes the XSRF-TOKEN cookie — without this, the eventual submit
+    // below would fail with 403 on a first-time visitor (see VerifyEmailPage).
+    getCsrfToken().catch(() => {})
 
     if (!tokenFromUrl) {
       setStatus('missing-token')

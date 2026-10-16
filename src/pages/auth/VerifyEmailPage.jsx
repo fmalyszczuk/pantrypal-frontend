@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { verifyEmail } from '../../api/auth.js'
+import { getCsrfToken, verifyEmail } from '../../api/auth.js'
 import './AuthForms.css'
 
 function VerifyEmailPage() {
@@ -19,7 +19,12 @@ function VerifyEmailPage() {
       return
     }
 
-    verifyEmail(token)
+    // This page is reached straight from an email link, bypassing the
+    // normal app startup that primes the XSRF-TOKEN cookie — without this,
+    // a first-time visitor's browser has no cookie yet, so the POST below
+    // would fail with 403 (see ../../../README.md's "Accounts and login").
+    getCsrfToken()
+      .then(() => verifyEmail(token))
       .then(() => setStatus('success'))
       .catch((err) => {
         setError(err.message)

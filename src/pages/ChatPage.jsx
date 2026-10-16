@@ -9,12 +9,15 @@ import './ChatPage.css'
 // the backend has no endpoint to fetch history back). The conversationId is
 // what actually gives the backend memory: send back the id it returned so
 // follow-ups like "make it 3 kg" resolve against the same conversation.
-const HISTORY_KEY = 'pantrypal:chat-history'
-const CONVERSATION_ID_KEY = 'pantrypal:chat-conversation-id'
-
-function ChatPage() {
-  const [messages, setMessages] = useLocalStorageState(HISTORY_KEY, [])
-  const [conversationId, setConversationId] = useLocalStorageState(CONVERSATION_ID_KEY, null)
+// Keyed by user id: localStorage is shared by every account that logs in on
+// this browser, so an unscoped key would leak one user's chat history to
+// the next person who logs in on the same device.
+function ChatPage({ userId }) {
+  const [messages, setMessages] = useLocalStorageState(`pantrypal:chat-history:${userId}`, [])
+  const [conversationId, setConversationId] = useLocalStorageState(
+    `pantrypal:chat-conversation-id:${userId}`,
+    null,
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 

@@ -2,14 +2,25 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
 import ResetPasswordPage from './ResetPasswordPage.jsx'
-import { resetPassword } from '../../api/auth.js'
+import { getCsrfToken, resetPassword } from '../../api/auth.js'
 
 vi.mock('../../api/auth.js', () => ({
+  getCsrfToken: vi.fn(),
   resetPassword: vi.fn(),
 }))
 
 beforeEach(() => {
   vi.clearAllMocks()
+  getCsrfToken.mockResolvedValue(null)
+})
+
+test('primes the CSRF cookie on mount, since this page is a first-time visitor\'s entry point', async () => {
+  window.history.pushState({}, '', '/reset-password?token=abc123')
+
+  render(<ResetPasswordPage />)
+
+  await screen.findByLabelText(/new password/i)
+  expect(getCsrfToken).toHaveBeenCalled()
 })
 
 test('submits the new password with the token from the URL', async () => {

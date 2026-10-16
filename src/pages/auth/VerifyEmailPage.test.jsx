@@ -1,14 +1,16 @@
 import { render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import VerifyEmailPage from './VerifyEmailPage.jsx'
-import { verifyEmail } from '../../api/auth.js'
+import { getCsrfToken, verifyEmail } from '../../api/auth.js'
 
 vi.mock('../../api/auth.js', () => ({
+  getCsrfToken: vi.fn(),
   verifyEmail: vi.fn(),
 }))
 
 beforeEach(() => {
   vi.clearAllMocks()
+  getCsrfToken.mockResolvedValue(null)
 })
 
 test('confirms the token from the URL and strips it from the address bar', async () => {
@@ -20,6 +22,16 @@ test('confirms the token from the URL and strips it from the address bar', async
   expect(await screen.findByText(/your email is confirmed/i)).toBeInTheDocument()
   expect(verifyEmail).toHaveBeenCalledWith('abc123')
   expect(window.location.search).toBe('')
+})
+
+test('primes the CSRF cookie before verifying, since this page is a first-time visitor\'s entry point', async () => {
+  window.history.pushState({}, '', '/verify-email?token=abc123')
+  verifyEmail.mockResolvedValue(null)
+
+  render(<VerifyEmailPage />)
+
+  await screen.findByText(/your email is confirmed/i)
+  expect(getCsrfToken).toHaveBeenCalled()
 })
 
 test('shows the backend error when the token is invalid or expired', async () => {

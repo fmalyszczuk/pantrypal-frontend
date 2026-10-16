@@ -59,6 +59,46 @@ test('offers to resend the verification email on 403', async () => {
   expect(await screen.findByText(/verification email sent/i)).toBeInTheDocument()
 })
 
+test('shows an error when resending the verification email fails', async () => {
+  login.mockRejectedValue(Object.assign(new Error('Email address not verified'), { status: 403 }))
+  resendVerification.mockRejectedValue(
+    Object.assign(new Error('Too many attempts.'), { status: 429, retryAfterSeconds: 60 }),
+  )
+  const userEventApi = userEvent.setup()
+
+  render(<LoginForm onLoggedIn={noop} onSwitchToRegister={noop} onSwitchToForgotPassword={noop} />)
+  await fillAndSubmit(userEventApi)
+
+  const resendButton = await screen.findByRole('button', { name: /resend verification email/i })
+  await userEventApi.click(resendButton)
+
+  expect(await screen.findByText(/try again in 1 minute/i)).toBeInTheDocument()
+  // The button stays usable for another try, unlike a one-shot "sent" state.
+  expect(screen.getByRole('button', { name: /resend verification email/i })).toBeEnabled()
+})
+
+test('does not carry a stale resend error into a fresh unverified result', async () => {
+  login.mockRejectedValue(Object.assign(new Error('Email address not verified'), { status: 403 }))
+  resendVerification.mockRejectedValue(
+    Object.assign(new Error('Too many attempts.'), { status: 429, retryAfterSeconds: 60 }),
+  )
+  const userEventApi = userEvent.setup()
+
+  render(<LoginForm onLoggedIn={noop} onSwitchToRegister={noop} onSwitchToForgotPassword={noop} />)
+  await fillAndSubmit(userEventApi)
+  const resendButton = await screen.findByRole('button', { name: /resend verification email/i })
+  await userEventApi.click(resendButton)
+  await screen.findByText(/try again in 1 minute/i)
+
+  // A second, separate login attempt (e.g. after editing the password)
+  // hits the same unverified wall again — the old resend error shouldn't
+  // still be showing from the previous attempt.
+  await userEventApi.click(screen.getByRole('button', { name: /log in/i }))
+
+  await screen.findByRole('button', { name: /resend verification email/i })
+  expect(screen.queryByText(/try again in 1 minute/i)).not.toBeInTheDocument()
+})
+
 test('shows a retry-after message on 429', async () => {
   login.mockRejectedValue(Object.assign(new Error('Too many attempts.'), { status: 429, retryAfterSeconds: 120 }))
   const userEventApi = userEvent.setup()
