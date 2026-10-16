@@ -40,8 +40,9 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 - Node.js and npm
 - The [backend](https://github.com/fmalyszczuk/ingredients-retriever) running locally
-  (defaults to `localhost:8080`); requires Java 21, and [Ollama](https://ollama.com)
-  running locally if you want the `/chat` feature to work
+  (defaults to `localhost:8080`); requires Java 21 and Docker (for its PostgreSQL
+  database), and [Ollama](https://ollama.com) running locally if you want the `/chat`
+  feature to work
 
 ### Install and run
 
