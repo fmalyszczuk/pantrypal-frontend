@@ -8,8 +8,10 @@ Backend repo: https://github.com/fmalyszczuk/ingredients-retriever
 
 ## Features
 
+- Accounts: register, log in/out, email verification, forgot/reset password, change
+  password, and delete account — every other feature below requires a logged-in user
 - Add a recipe from a URL, by typing its title and ingredients in by hand, by
-  uploading a PDF, DOCX, TXT, or a photo/screenshot, or by searching a dish name
+  uploading a PDF, DOCX, TXT, MD, or a photo/screenshot, or by searching a dish name
   for an LLM-suggested ingredient list
 - View extracted ingredients per recipe
 - Browse your saved recipes and delete one, optionally subtracting its ingredients
@@ -67,12 +69,40 @@ npm run test:run   # run tests once
 
 ```
 src/
-  api/          API calls (recipes, shopping list, chat) — never fetch() directly in components
+  api/          API calls (auth, recipes, shopping list, chat) — never fetch() directly in components
   components/   Reusable UI components, each with colocated CSS and tests
   pages/        Top-level route pages
+  pages/auth/   Login/register/forgot-password and the two email-link pages
   hooks/        Shared custom hooks
   test/         Vitest setup
 ```
+
+## Authentication
+
+Every endpoint except the few listed as *open* below requires a logged-in user — an
+anonymous call gets `401`. Login is a session cookie, not a token the frontend ever
+sees or stores:
+
+- On startup the app calls `GET /auth/csrf` (sets the `XSRF-TOKEN` cookie) and then
+  `GET /auth/me` — `200` shows the app, `401` shows the login page.
+- Every `POST`/`PATCH`/`DELETE` must echo the `XSRF-TOKEN` cookie's value back in an
+  `X-XSRF-TOKEN` header or get `403`. [`client.js`](src/api/client.js) does this for
+  every request automatically, including file uploads.
+- A `401` from *any* call (session expired, logged out elsewhere) falls back to the
+  login page from wherever it happens — `client.js` fires a `pantrypal:unauthorized`
+  event that `App.jsx` listens for, so no page has to special-case this itself.
+- `POST /auth/login` can also answer `403` (email not verified — the login form offers
+  to resend the link) or `429` (too many attempts — shown with the `Retry-After` time).
+- The password-reset and email-verification links the backend emails out
+  (`/verify-email?token=...`, `/reset-password?token=...`) are real URLs opened
+  directly in a browser, not in-app navigation. There's no router: `App.jsx` matches
+  `window.location.pathname` against these two paths once at the top, before the
+  normal tabbed app, and renders a standalone page instead. Each one reads the token
+  from `window.location.search` and immediately strips it with `history.replaceState`
+  so it doesn't linger in browser history.
+- Account settings: clicking the logged-in email in the nav opens a page to change the
+  password (logs out every other session, this one stays in) or delete the account
+  (asks for the password and a confirm dialog — permanent, no undo).
 
 ## Backend contract
 
@@ -81,6 +111,17 @@ forwarding, so it never collides with frontend routes.
 
 | Method   | Endpoint                       | Description                                        |
 | -------- | ------------------------------- | --------------------------------------------------- |
+| POST     | `/auth/register`                | Create an account — *open*                           |
+| POST     | `/auth/login`                   | Log in, sets the session cookie — *open*             |
+| GET      | `/auth/csrf`                    | Get the CSRF token cookie — *open*                   |
+| GET      | `/auth/me`                      | Who is logged in (`401` if nobody)                   |
+| POST     | `/auth/verify-email`            | Confirm an email address with the emailed token — *open* |
+| POST     | `/auth/resend-verification`     | Email the verification link again — *open*           |
+| POST     | `/auth/forgot-password`         | Email a password reset link — *open*                 |
+| POST     | `/auth/reset-password`          | Set a new password with the emailed token — *open*   |
+| POST     | `/auth/logout`                  | Log out                                               |
+| POST     | `/auth/password`                | Change the password (needs the current one)           |
+| POST     | `/auth/delete-account`          | Delete the account and all its data (needs the password) |
 | GET      | `/shopping-list`                | Get the merged shopping list                        |
 | POST     | `/shopping-list/items`          | Add an item (sums into an existing one by name)     |
 | PATCH    | `/shopping-list/items/{name}`   | Update quantity, unit, or purchased status           |
@@ -92,7 +133,7 @@ forwarding, so it never collides with frontend routes.
 | POST     | `/recipes`                      | Add a recipe by typing in its ingredients            |
 | POST     | `/recipes/from-url`             | Add a recipe by scraping a recipe page               |
 | POST     | `/recipes/from-text`            | Add a recipe from a dish name (LLM-suggested)        |
-| POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, or image |
+| POST     | `/recipes/from-file`            | Add a recipe from an uploaded PDF, DOCX, TXT, MD, or image |
 | POST     | `/chat`                         | Talk to the shopping list in plain English (optional `conversationId` for memory) |
 | DELETE   | `/chat/{conversationId}`        | Forget a conversation                                |
 

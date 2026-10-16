@@ -19,7 +19,7 @@ test('sends the first message with no conversationId, then reuses the id the bac
   sendChatMessage.mockResolvedValue({ reply: 'Added eggs.', conversationId: 'abc-123' })
   const user = userEvent.setup()
 
-  render(<ChatPage />)
+  render(<ChatPage userId={1} />)
 
   await user.type(screen.getByLabelText(/chat message/i), 'add eggs')
   await user.click(screen.getByRole('button', { name: /send/i }))
@@ -39,7 +39,7 @@ test('clearing the chat forgets the conversation on the backend and resets local
   sendChatMessage.mockResolvedValue({ reply: 'Added eggs.', conversationId: 'abc-123' })
   const user = userEvent.setup()
 
-  render(<ChatPage />)
+  render(<ChatPage userId={1} />)
 
   await user.type(screen.getByLabelText(/chat message/i), 'add eggs')
   await user.click(screen.getByRole('button', { name: /send/i }))
@@ -66,7 +66,7 @@ test('shows a confirmation prompt and sends "yes" when its button is clicked', a
   })
   const user = userEvent.setup()
 
-  render(<ChatPage />)
+  render(<ChatPage userId={1} />)
 
   await user.type(screen.getByLabelText(/chat message/i), 'clear my list')
   await user.click(screen.getByRole('button', { name: /send/i }))
@@ -84,11 +84,25 @@ test('shows a confirmation prompt and sends "yes" when its button is clicked', a
   expect(screen.getByText(/shopping list updated/i)).toBeInTheDocument()
 })
 
+test('keeps chat history isolated per user so a second account does not see the first one\'s messages', async () => {
+  sendChatMessage.mockResolvedValue({ reply: 'Added eggs.', conversationId: 'abc-123' })
+  const user = userEvent.setup()
+
+  const { unmount } = render(<ChatPage userId={1} />)
+  await user.type(screen.getByLabelText(/chat message/i), 'add eggs')
+  await user.click(screen.getByRole('button', { name: /send/i }))
+  await screen.findByText(/added eggs/i)
+  unmount()
+
+  render(<ChatPage userId={2} />)
+  expect(screen.queryByText(/added eggs/i)).not.toBeInTheDocument()
+})
+
 test('shows an error message when the backend call fails', async () => {
   sendChatMessage.mockRejectedValue(new Error('backend is down'))
   const user = userEvent.setup()
 
-  render(<ChatPage />)
+  render(<ChatPage userId={1} />)
 
   await user.type(screen.getByLabelText(/chat message/i), 'add eggs')
   await user.click(screen.getByRole('button', { name: /send/i }))

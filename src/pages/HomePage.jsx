@@ -15,7 +15,7 @@ const WAYS_TO_ADD = [
   },
   {
     title: 'Upload a file',
-    description: 'Upload a PDF, DOCX, TXT, or a photo/screenshot of a recipe.',
+    description: 'Upload a PDF, DOCX, TXT, MD, or a photo/screenshot of a recipe.',
   },
 ]
 
