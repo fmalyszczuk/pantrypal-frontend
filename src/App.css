@@ -30,3 +30,19 @@
   background: #2d6cdf;
   color: #fff;
 }
+
+.app__nav-spacer {
+  flex: 1;
+}
+
+.app__user {
+  align-self: center;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.app__status {
+  color: #555;
+  text-align: center;
+  padding: 2rem 0;
+}
